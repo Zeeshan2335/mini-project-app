@@ -18,6 +18,7 @@ export default function Traffic() {
   const handleCounter = () => {
     const interval = setInterval(() => {
       setCounter((prevCounter) => prevCounter + 1);
+      counter<16 && clearInterval(inter)
     }, 1000); // Change interval to 1000ms (1 second)
     setInter(interval);
   };
