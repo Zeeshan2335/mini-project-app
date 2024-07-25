@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Todo() {
   const [text, setText] = useState("");
@@ -25,21 +27,24 @@ export default function Todo() {
 
   // here making array of string
   const handleText = () => {
-    text.length > 0 && setList([text, ...list]) & setListCopy([text, ...list]);
+    text.length > 0 &&
+      setList([text, ...list]) &
+        setListCopy([text, ...list]) &
+        toast.success("Added successfully");
     //after add the data in array input is clearing
     setText("");
   };
 
   const handleRemove = (index) => {
     const filterdList = list.filter((item, ind) => ind !== index);
-    setList(filterdList);
+    setList(filterdList) & toast.success("Removed successfully");
   };
 
   const handleUpdate = (index, newItem) => {
     let listCopy = list;
     listCopy.splice(index, 1, newItem);
     setList([...listCopy]);
-    setListCopy([...listCopy]);
+    setListCopy([...listCopy]) & toast.success("Updated successfully");
     setIsEdit(false);
   };
 
@@ -64,6 +69,9 @@ export default function Todo() {
     <>
       <div childre className="min-h-screen">
         <h1>this is Todo page</h1>
+        <div>
+          <ToastContainer />
+        </div>
         <div className="w-full flex justify-center">
           <input
             onChange={handleChange}
