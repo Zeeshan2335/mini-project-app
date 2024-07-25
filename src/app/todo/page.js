@@ -39,6 +39,7 @@ export default function Todo() {
     let listCopy = list;
     listCopy.splice(index, 1, newItem);
     setList([...listCopy]);
+    setListCopy([...listCopy]);
     setIsEdit(false);
   };
 
