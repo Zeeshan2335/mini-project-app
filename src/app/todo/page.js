@@ -1,26 +1,31 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Todo() {
   const [text, setText] = useState("");
+  const [searchText, setSearchText] = useState("");
   const [editText, setEditText] = useState("");
   const [list, setList] = useState([]);
+  const [listCopy, setListCopy] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [ind, setInd] = useState(null);
 
-  console.log("editText :", editText);
-  console.log("list :", list);
+  useEffect(() => {
+    localStorage.setItem("list", JSON.stringify(list));
+    const getData = JSON.parse(localStorage.getItem("list"));
+  }, [list]);
 
   // here value store in state
   const handleChange = (e) => {
     let value = e.target.value;
-    setText(value);
-    // setEditText(value);
+    let inputName = e.target.name;
+    inputName == "todo" && setText(value);
+    inputName == "search" && setSearchText(value);
   };
 
   // here making array of string
   const handleText = () => {
-    text.length > 0 && setList([text, ...list]);
+    text.length > 0 && setList([text, ...list]) & setListCopy([text, ...list]);
     //after add the data in array input is clearing
     setText("");
   };
@@ -33,7 +38,7 @@ export default function Todo() {
   const handleUpdate = (index, newItem) => {
     let listCopy = list;
     listCopy.splice(index, 1, newItem);
-    setList(listCopy);
+    setList([...listCopy]);
     setIsEdit(false);
   };
 
@@ -43,6 +48,17 @@ export default function Todo() {
     setInd(ind);
   };
 
+  const handleSearch = () => {
+    const result = listCopy.filter((item) =>
+      item.toLocaleLowerCase().includes(searchText.toLocaleLowerCase())
+    );
+
+    setList(result);
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchText]);
   return (
     <>
       <div childre className="min-h-screen">
@@ -52,11 +68,19 @@ export default function Todo() {
             onChange={handleChange}
             value={text}
             type="text"
+            name="todo"
             className="p-3 bg-emerald-500"
           />
           <button onClick={handleText} className="p-3 bg-emerald-500">
             ADD
           </button>
+          <input
+            onChange={handleChange}
+            name="search"
+            type="search"
+            placeholder="search..."
+            className="p-3 bg-emerald-500 ml-4 placeholder:text-black"
+          />
         </div>
         <div className="w-full">
           {list?.map((item, index) => (
